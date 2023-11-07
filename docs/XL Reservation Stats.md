@@ -95,4 +95,3 @@ See docs/images/studentStat-wireframe.png
   ## 4. What concerns exist for security and privacy of data? Should the capabilities you are implementing be specific to only certaain users or roles? (For example: When Sally Student makes a reservation, only Sally Student or Amy Ambassador should be able to cancel the reservation. Another student, such as Sam Student, should not be able to cancel Sally’s reservation.)
 
   Each students' data should only be present to this student with the correct pid. However, if for Amy Ambassador, they should be able to view all students' histories and navigate among them.
-
