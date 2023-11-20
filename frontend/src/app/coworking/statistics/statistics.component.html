@@ -1,3 +1,8 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.4.0/remixicon.css"
+  crossorigin="" />
+
 <div style="display: flex; align-items: center">
   <mat-form-field appearance="fill">
     <mat-label>Start Date</mat-label>
@@ -56,10 +61,65 @@
       class="search">
       Search
     </button>
-    <button mat-raised-button color="accent" type="button" class="save">
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="saveReport()"
+      type="button"
+      class="save">
       Save
     </button>
-    <search-reports>Reports</search-reports>
+    <mat-accordion class="custom-accordion">
+      <mat-expansion-panel class="custom-expansion-panel">
+        <mat-expansion-panel-header class="custom-expansion-panel-header">
+          <mat-panel-title class="custom-panel-title">Reports</mat-panel-title>
+          <mat-panel-description class="custom-panel-description">
+            Click a report to view its statistics
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div
+          *ngFor="let report of queries; let i = index"
+          class="custom-panel-content">
+          <div (click)="selectReportAndFetchData(report)" class="report-line">
+            <span class="report-name"> Name: {{ report.name }}</span
+            >,
+            <span class="report-range"
+              >Range: {{ report.start_date | date: 'MM/dd/yy' }} to
+              {{ report.end_date | date: 'MM/dd/yy' }}</span
+            >
+            <ng-container *ngIf="report.compare_start_date">
+              <span class="report-compare"
+                >, Compare:
+                {{ report.compare_start_date | date: 'MM/dd/yy' }} to
+                {{ report.compare_end_date | date: 'MM/dd/yy' }}</span
+              >
+            </ng-container>
+          </div>
+          <button
+            mat-raised-button
+            (click)="updateShare(report)"
+            class="custom-panel-button"
+            [color]="getColor(report)"
+            [ngClass]="report.share ? 'undo-button' : 'share-button'">
+            <ng-container *ngIf="report.share; else notShared">
+              <i class="ri-arrow-go-back-line"></i>
+            </ng-container>
+            <ng-template #notShared>
+              <i class="ri-share-box-line"></i>
+            </ng-template>
+          </button>
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="deleteQuery(report)"
+            class="delete-button">
+            <i class="ri-close-line"></i>
+          </button>
+          <mat-divider *ngIf="i < queries.length - 1"></mat-divider>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
 </div>
 
