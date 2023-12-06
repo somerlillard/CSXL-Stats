@@ -3,8 +3,11 @@
 This API is used to make and manage reservations."""
 
 from datetime import datetime
+from typing import Sequence
 from fastapi import APIRouter, Depends, HTTPException
-from ..authentication import registered_user
+
+from backend.services.user import UserService
+from ..authentication import authenticated_pid, registered_user
 from starlette.responses import JSONResponse
 from ...services.coworking.reservation import ReservationService
 from ...models import User
@@ -68,7 +71,7 @@ def cancel_reservation(
     )
 
 
-@api.get("/statistics/get-daily", tags=["Coworking"])
+@api.get("/statistics/get_daily", tags=["Coworking"])
 def get_daily_reservation_counts(
     year_start: int,
     month_start: int,
@@ -94,3 +97,44 @@ def get_daily_reservation_counts(
     print(counts)
 
     return counts
+
+
+@api.get(
+    "/statistics/get_personal_statistical_history",
+    response_model=Sequence[Reservation],
+    tags=["Coworking"],
+)
+def get_personal_statistical_history(
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+    pid_onyen: tuple[int, str] = Depends(authenticated_pid),
+    user_svc: UserService = Depends(),
+):
+    """Get Personal Statistical History"""
+    pid, onyen = pid_onyen
+    user = user_svc.get(pid)
+    if user:
+        reservation = reservation_svc.get_personl_reservation_history(user)
+    else:
+        raise Exception("User is None")
+    return reservation
+
+
+@api.get("/statistics/mean-stay-time/{time_range}", tags=["Coworking"])
+def get_mean_stay_time(
+    time_range: str,
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+) -> float:
+    """Get the mean stay time for a user for a given time range."""
+    return reservation_svc.calculate_mean_stay_time(subject, time_range)
+
+
+@api.get("/statistics/longer-stay-percentage/{time_range}", tags=["Coworking"])
+def get_longer_stay_percentage(
+    time_range: str,
+    subject: User = Depends(registered_user),
+    reservation_svc: ReservationService = Depends(),
+) -> float:
+    """Get the percentage of reservations where the user's stay time is longer than others."""
+    return reservation_svc.calculate_percentage_of_longer_stays(subject, time_range)

@@ -25,6 +25,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { SearchReports } from './widgets/search-reports/search-reports.widget';
+import { PublicStatsComponent } from './public-stats/public-stats.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { PersonalStatsSpecComponent } from './personal-stats-spec/personal-stats-spec.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,9 @@ import { SearchReports } from './widgets/search-reports/search-reports.widget';
     CoworkingHoursCard,
     StatisticsComponent,
     StatsTable,
-    SearchReports
+    SearchReports,
+    PublicStatsComponent,
+    PersonalStatsSpecComponent
   ],
   imports: [
     CommonModule,
@@ -55,7 +61,9 @@ import { SearchReports } from './widgets/search-reports/search-reports.widget';
     MatFormFieldModule,
     MatInputModule,
     MatExpansionModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatOptionModule
   ],
   providers: [{ provide: NgChartsConfiguration }]
 })
